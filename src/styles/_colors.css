@@ -1,3 +1,6 @@
 :root {
   /* Define your variable colors here */
+  --color-primary: rgb(112, 130, 177);
+  --color-secondary: #185791;
+  --color-background: rgb(198, 207, 226);
 }
