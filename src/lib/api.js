@@ -1,8 +1,23 @@
 export function fetchCharacters() {
-  const url = "https://rickandmortyapi.com/api/character";
+  let url;
+  const inputBox = document.querySelector(".search_field");
+  const filterBox = document.querySelector(".select-box");
+  const inputName = inputBox.value;
+  const status = filterBox.value;
+  console.log(status);
+  console.log(inputName);
+  if (status == "Alive") {
+    url = `https://rickandmortyapi.com/api/character?name=${inputName}&status=alive`;
+  } else if (status == "Dead") {
+    url = `https://rickandmortyapi.com/api/character?name=${inputName}&status=dead`;
+  } else if (status == "unknown") {
+    url = `https://rickandmortyapi.com/api/character?name=${inputName}&status=unknown`;
+  } else if (status == "All") {
+    url = `https://rickandmortyapi.com/api/character?name=${inputName}`;
+  }
 
-  // const promise = fetch(url);
-  // const dataPromise = promise;
+  console.log(url);
+
   fetch(url)
     .then((response) => {
       if (response.ok) {
@@ -13,39 +28,42 @@ export function fetchCharacters() {
     })
     .then((dataObject) => {
       // Work with the data
+
       console.log(dataObject);
-      dataObject.results
-        .forEach((character) => {
-          const section = document.createElement("section");
-          section.classList.add("characters");
-          const main = document.querySelector("main");
-          const fullName = document.createElement("h1");
-          const image = document.createElement("img");
-          image.src = character.image;
-          image.alt = character.name;
-          fullName.textContent = `${character.name}`;
-          main.append(section);
-          section.append(fullName);
-          section.append(image);
-        })
-        .catch((error) => {
-          console.log(error.toString());
-          console.log(error);
-        });
+      dataObject.results.forEach((character) => {
+        const section = document.createElement("section");
+        section.classList.add("characters");
+        const main = document.querySelector("main");
+        const fullName = document.createElement("h1");
+        const image = document.createElement("img");
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("wrapper_class");
+        image.classList.add("image_class");
+        image.src = character.image;
+        image.alt = character.name;
+        fullName.textContent = `${character.name}`;
+
+        if (character.status === "Alive") {
+          section.style.backgroundColor = "blue";
+        } else if (character.status === "Dead") {
+          section.style.backgroundColor = "green";
+        } else if (character.status === "unknown") {
+          section.style.backgroundColor = "yellow";
+        }
+        main.append(section);
+        section.append(wrapper);
+        wrapper.append(fullName);
+        wrapper.append(image);
+      });
+    })
+    .catch((error) => {
+      console.log(error.toString());
+      console.log(error);
+      alert("Cannot find URL");
     });
 }
 
 export function clearCharacters() {
   const characterSections = document.querySelectorAll("section");
-  characterSections.forEach((section) => characterSections.remove());
+  characterSections.forEach((section) => section.remove());
 }
-//           character.name
-// const main = document.querySelector("main");
-//     const person = document.createElement("section");
-//   section.classList.add("person");
-//   const h2 = document.createElement("h2");
-//   const h3 = document.createElement("h3");
-//   h2.textContent = `${person.name.title} ${person.name.first} ${person.name.last}`;
-//   h3.textContent = `${person.gender}`;
-//   if (h3.textContent.indexOf("female") === -1) {
-//     h3.classList.toggle("female-color");
